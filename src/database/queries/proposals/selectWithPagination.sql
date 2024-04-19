@@ -10,17 +10,24 @@ WHERE
     ELSE
       true
     END
-  AND
-  CASE
+  AND CASE
     WHEN :search::text != '' THEN
       pfv.value_search @@ websearch_to_tsquery('english', :search::text)
     ELSE
       true
     END
-  AND
-  CASE
+  AND CASE
     WHEN :organizationId != 0 THEN
       op.organization_id = :organizationId
+    ELSE
+      true
+    END
+  AND CASE
+    WHEN :userId != 0 THEN
+      (
+        p.created_by = :userId
+        OR :isAdministrator
+      )
     ELSE
       true
     END

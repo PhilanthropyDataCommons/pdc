@@ -16,6 +16,7 @@ import {
 	InputValidationError,
 } from '../errors';
 import {
+	extractCreatedByParameters,
 	extractOrganizationParameters,
 	extractPaginationParameters,
 	extractSearchParameters,
@@ -31,17 +32,21 @@ const getProposals = (
 		next(new FailedMiddlewareError('Unexpected lack of auth context.'));
 		return;
 	}
-	const { user } = req;
 	const paginationParameters = extractPaginationParameters(req);
 	const searchParameters = extractSearchParameters(req);
 	const organizationParameters = extractOrganizationParameters(req);
+	const createdByParameters = extractCreatedByParameters(req);
+
 	(async () => {
-		const proposalBundle = await loadProposalBundle({
-			...getLimitValues(paginationParameters),
-			...searchParameters,
-			...organizationParameters,
-			createdBy: user.id,
-		});
+		const proposalBundle = await loadProposalBundle(
+			{
+				...getLimitValues(paginationParameters),
+				...searchParameters,
+				...organizationParameters,
+				...createdByParameters,
+			},
+			req,
+		);
 
 		res.status(200).contentType('application/json').send(proposalBundle);
 	})().catch((error: unknown) => {

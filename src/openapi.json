@@ -56,6 +56,15 @@
 				"name": "proposal",
 				"required": false,
 				"description": "A reference (ID) to an existing proposal entity."
+			},
+			"createdByParam": {
+				"schema": {
+					"type": "integer"
+				},
+				"in": "query",
+				"name": "createdBy",
+				"required": false,
+				"description": "A reference (ID) to a user entity."
 			}
 		},
 		"securitySchemes": {
@@ -1073,7 +1082,8 @@
 					{ "$ref": "#/components/parameters/pageParam" },
 					{ "$ref": "#/components/parameters/countParam" },
 					{ "$ref": "#/components/parameters/searchParam" },
-					{ "$ref": "#/components/parameters/organizationParam" }
+					{ "$ref": "#/components/parameters/organizationParam" },
+					{ "$ref": "#/components/parameters/createdByParam" }
 				],
 				"responses": {
 					"200": {
