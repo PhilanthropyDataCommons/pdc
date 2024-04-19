@@ -1,3 +1,4 @@
+import type { JSONSchemaType } from 'ajv';
 import type { Writable } from './Writable';
 
 interface User {
@@ -6,6 +7,22 @@ interface User {
 	readonly createdAt: string;
 }
 
+const userSchema: JSONSchemaType<User> = {
+	type: 'object',
+	properties: {
+		id: {
+			type: 'number',
+		},
+		authenticationId: {
+			type: 'string',
+		},
+		createdAt: {
+			type: 'string',
+		},
+	},
+	required: ['id', 'authenticationId', 'createdAt'],
+};
+
 type WritableUser = Writable<User>;
 
-export { User, WritableUser };
+export { User, userSchema, WritableUser };

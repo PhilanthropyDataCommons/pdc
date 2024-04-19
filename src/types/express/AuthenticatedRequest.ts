@@ -1,11 +1,6 @@
 import { Request as JwtRequest } from 'express-jwt';
-import { User } from '../User';
+import type { AuthContext } from '../AuthContext';
 
-interface AuthenticatedRequest extends JwtRequest {
-	user?: User;
-	role?: {
-		isAdministrator: boolean;
-	};
-}
+type AuthenticatedRequest = JwtRequest & Partial<AuthContext>;
 
 export { AuthenticatedRequest };
