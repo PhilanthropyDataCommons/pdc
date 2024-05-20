@@ -11,6 +11,7 @@ import {
 	isAuthContext,
 	isTinyPgErrorWithQueryContext,
 	isWritableProposal,
+	isProposalExternalId,
 } from '../types';
 import {
 	DatabaseError,
@@ -77,6 +78,33 @@ const getProposal = (
 	(async () => {
 		await assertProposalAuthorization(proposalId, req);
 		const proposal = await loadProposal(proposalId);
+		res.status(200).contentType('application/json').send(proposal);
+	})().catch((error: unknown) => {
+		if (isTinyPgErrorWithQueryContext(error)) {
+			next(new DatabaseError('Error loading the proposal.', error));
+			return;
+		}
+		next(error);
+	});
+};
+
+const getProposalByExternalId = (
+	req: AuthenticatedRequest,
+	res: Response,
+	next: NextFunction,
+): void => {
+	if (!isAuthContext(req)) {
+		next(new FailedMiddlewareError('Unexpected lack of auth context.'));
+		return;
+	}
+	const { externalId } = req.params;
+	if (!isProposalExternalId(externalId)) {
+		next(new InputValidationError('Invalid external id parameter.', isProposalExternalId.errors ?? []));
+		return;
+	}
+	(async () => {
+		await assertProposalAuthorization(externalId, req);
+		const proposal = await loadProposal(externalId);
 		res.status(200).contentType('application/json').send(proposal);
 	})().catch((error: unknown) => {
 		if (isTinyPgErrorWithQueryContext(error)) {

@@ -1327,6 +1327,41 @@
 				}
 			}
 		},
+		"/proposals/externalId/{externalId}": {
+			"get": {
+				"operationId": "getProposalByExternalId",
+				"summary": "Gets a specific proposal by its external ID.",
+				"tags": ["Proposals"],
+				"security": [
+					{
+						"auth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "externalId",
+						"description": "The external ID of a proposal.",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "The proposal.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Proposal"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/proposalVersions": {
 			"post": {
 				"operationId": "addProposalVersion",

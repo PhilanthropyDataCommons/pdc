@@ -19,6 +19,7 @@ export * from './PostgresErrorCode';
 export * from './PresignedPostRequest';
 export * from './ProcessBulkUploadJobPayload';
 export * from './Proposal';
+export * from './ProposalExternalId';
 export * from './ProposalFieldValue';
 export * from './ProposalVersion';
 export * from './TableMetrics';

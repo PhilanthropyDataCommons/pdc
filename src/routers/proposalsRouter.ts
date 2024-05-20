@@ -10,6 +10,12 @@ proposalsRouter.get(
 	proposalsHandlers.getProposal,
 );
 
+proposalsRouter.get(
+	'external/:proposalId',
+	requireAuthentication,
+	proposalsHandlers.getProposalByExternalId,
+);
+
 proposalsRouter.get('/', requireAuthentication, proposalsHandlers.getProposals);
 
 proposalsRouter.post(
