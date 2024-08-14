@@ -1,4 +1,5 @@
 import { ajv } from '../ajv';
+import type { BaseFieldLocalization } from './BaseFieldLocalization';
 import type { JSONSchemaType } from 'ajv';
 import type { Writable } from './Writable';
 
@@ -23,6 +24,7 @@ interface BaseField {
 	shortCode: string;
 	dataType: BaseFieldDataType;
 	scope: BaseFieldScope;
+	readonly localizations: Record<string, BaseFieldLocalization>;
 	readonly createdAt: string;
 }
 

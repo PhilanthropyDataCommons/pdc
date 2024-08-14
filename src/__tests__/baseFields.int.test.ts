@@ -1,6 +1,12 @@
 import request from 'supertest';
 import { app } from '../app';
-import { createBaseField, loadBaseFields, loadTableMetrics } from '../database';
+import {
+	createBaseField,
+	createOrUpdateBaseFieldLocalization,
+	loadBaseFieldLocalizations,
+	loadBaseFields,
+	loadTableMetrics,
+} from '../database';
 import { BaseFieldDataType, BaseFieldScope, PostgresErrorCode } from '../types';
 import { expectTimestamp } from '../test/utils';
 import {
@@ -19,6 +25,22 @@ const createTestBaseField = async () =>
 		scope: BaseFieldScope.PROPOSAL,
 	});
 
+const createTestBaseFieldWithLocalization = async () => {
+	const baseField = await createBaseField({
+		defaultLabel: 'Summary',
+		defaultDescription: 'A summary of the proposal',
+		shortCode: 'summary',
+		dataType: BaseFieldDataType.STRING,
+		scope: BaseFieldScope.PROPOSAL,
+	});
+
+	await createOrUpdateBaseFieldLocalization({
+		baseFieldId: baseField.id,
+		language: 'fr',
+		label: 'Résume',
+		description: 'Le Résume de proposal',
+	});
+};
 describe('/baseFields', () => {
 	describe('GET /', () => {
 		it('does not require authentication', async () => {
@@ -29,21 +51,36 @@ describe('/baseFields', () => {
 			await agent.get('/baseFields').expect(200, []);
 		});
 
-		it('returns all base fields present in the database', async () => {
-			await createBaseField({
+		it('returns all base fields present in the database along with their localizations', async () => {
+			const baseFieldOne = await createBaseField({
 				defaultLabel: 'First Name',
 				defaultDescription: 'The first name of the applicant',
 				shortCode: 'firstName',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
 			});
-			await createBaseField({
+			const baseFieldTwo = await createBaseField({
 				defaultLabel: 'Last Name',
 				defaultDescription: 'The last name of the applicant',
 				shortCode: 'lastName',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
 			});
+
+			await createOrUpdateBaseFieldLocalization({
+				baseFieldId: baseFieldOne.id,
+				language: 'fr',
+				label: 'prenom',
+				description: 'le prenom',
+			});
+
+			await createOrUpdateBaseFieldLocalization({
+				baseFieldId: baseFieldTwo.id,
+				language: 'fr',
+				label: 'postnom',
+				description: 'le postnom',
+			});
+
 			const result = await agent.get('/baseFields').expect(200);
 			expect(result.body).toMatchObject([
 				{
@@ -52,6 +89,16 @@ describe('/baseFields', () => {
 					defaultDescription: 'The first name of the applicant',
 					shortCode: 'firstName',
 					dataType: BaseFieldDataType.STRING,
+					scope: BaseFieldScope.PROPOSAL,
+					localizations: {
+						fr: {
+							label: 'prenom',
+							language: 'fr',
+							createdAt: expectTimestamp,
+							baseFieldId: 1,
+							description: 'le prenom',
+						},
+					},
 					createdAt: expectTimestamp,
 				},
 				{
@@ -60,6 +107,16 @@ describe('/baseFields', () => {
 					defaultDescription: 'The last name of the applicant',
 					shortCode: 'lastName',
 					dataType: BaseFieldDataType.STRING,
+					scope: BaseFieldScope.PROPOSAL,
+					localizations: {
+						fr: {
+							label: 'postnom',
+							language: 'fr',
+							createdAt: expectTimestamp,
+							baseFieldId: 2,
+							description: 'le postnom',
+						},
+					},
 					createdAt: expectTimestamp,
 				},
 			]);
@@ -98,6 +155,7 @@ describe('/baseFields', () => {
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
+				localizations: {},
 				createdAt: expectTimestamp,
 			});
 			expect(after.count).toEqual(1);
@@ -302,6 +360,8 @@ describe('/baseFields', () => {
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.NUMBER,
 				scope: BaseFieldScope.ORGANIZATION,
+				localizations: {},
+
 				createdAt: expectTimestamp,
 			});
 		});
@@ -327,6 +387,7 @@ describe('/baseFields', () => {
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.NUMBER,
 				scope: BaseFieldScope.ORGANIZATION,
+				localizations: {},
 				createdAt: expectTimestamp,
 			});
 		});
@@ -435,6 +496,143 @@ describe('/baseFields', () => {
 					scope: BaseFieldScope.PROPOSAL,
 				})
 				.expect(404);
+		});
+	});
+	describe('PUT /:baseFieldId/:language', () => {
+		it('requires authentication', async () => {
+			await agent.put('/baseFields/1/fr').expect(401);
+		});
+
+		it('requires administrator role', async () => {
+			await agent.put('/baseFields/1/fr').set(authHeader).expect(401);
+		});
+
+		it('creates the specified base field if it does not exist', async () => {
+			await createTestBaseField();
+			await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+					description: 'Le Résume de proposal',
+				})
+				.expect(200);
+			const baseFieldLocalizations = await loadBaseFieldLocalizations();
+			expect(baseFieldLocalizations[0]).toMatchObject({
+				baseFieldId: 1,
+				label: 'Résume',
+				description: 'Le Résume de proposal',
+				createdAt: expectTimestamp,
+			});
+		});
+
+		it('updates the specified base field if it does exist', async () => {
+			await createTestBaseFieldWithLocalization();
+			await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Le Résume',
+					description: 'Le grand Résume de proposal',
+				})
+				.expect(200);
+			const baseFieldLocalizations = await loadBaseFieldLocalizations();
+			expect(baseFieldLocalizations[0]).toMatchObject({
+				baseFieldId: 1,
+				label: 'Le Résume',
+				description: 'Le grand Résume de proposal',
+				createdAt: expectTimestamp,
+			});
+		});
+
+		it('returns the created or updated base field', async () => {
+			await createTestBaseField();
+			const result = await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+					description: 'Le Résume de proposal',
+				})
+				.expect(200);
+			expect(result.body).toMatchObject({
+				baseFieldId: 1,
+				label: 'Résume',
+				description: 'Le Résume de proposal',
+				createdAt: expectTimestamp,
+			});
+		});
+
+		it('returns 400 bad request when no label is sent', async () => {
+			await createTestBaseField();
+
+			const result = await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					description: 'Le Résume de proposal',
+				})
+				.expect(400);
+			expect(result.body).toMatchObject({
+				name: 'InputValidationError',
+				details: expect.any(Array) as unknown[],
+			});
+		});
+
+		it('returns 400 bad request when no description is sent', async () => {
+			await createTestBaseField();
+			const result = await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+				})
+				.expect(400);
+			expect(result.body).toMatchObject({
+				name: 'InputValidationError',
+				details: expect.any(Array) as unknown[],
+			});
+		});
+
+		it('returns 400 when a non-numeric ID is sent', async () => {
+			const result = await agent
+				.put('/baseFields/notanumber/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+					description: 'Le Résume de proposal',
+				})
+				.expect(400);
+			expect(result.body).toMatchObject({
+				name: 'InputValidationError',
+				details: expect.any(Array) as unknown[],
+			});
+		});
+
+		it('returns 422 conflict when a base field is referenced that does not exist', async () => {
+			const result = await agent
+				.put('/baseFields/1/fr')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+					description: 'Le Résume de proposal',
+				})
+				.expect(422);
+			expect(result.body).toMatchObject({
+				name: 'DatabaseError',
+				details: [
+					{
+						code: PostgresErrorCode.FOREIGN_KEY_VIOLATION,
+					},
+				],
+			});
 		});
 	});
 });

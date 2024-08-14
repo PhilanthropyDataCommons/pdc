@@ -1,4 +1,4 @@
-import { db } from '../../db';
+import { db as defaultDb } from '../../db';
 import type {
 	BaseField,
 	JsonResultSet,
@@ -7,6 +7,7 @@ import type {
 
 export const createBaseField = async (
 	createValues: WritableBaseField,
+	db = defaultDb,
 ): Promise<BaseField> => {
 	const { defaultLabel, defaultDescription, shortCode, dataType, scope } =
 		createValues;

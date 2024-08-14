@@ -1,6 +1,15 @@
-import { createBaseField, loadBaseFields, updateBaseField } from '../database';
-import { isTinyPgErrorWithQueryContext, isWritableBaseField } from '../types';
 import { DatabaseError, InputValidationError } from '../errors';
+import {
+	createBaseField,
+	loadBaseFields,
+	updateBaseField,
+	createOrUpdateBaseFieldLocalization,
+} from '../database';
+import {
+	isTinyPgErrorWithQueryContext,
+	isWritableBaseField,
+	isWritableBaseFieldLocalization,
+} from '../types';
 import type { Request, Response, NextFunction } from 'express';
 
 const getBaseFields = (
@@ -83,8 +92,52 @@ const putBaseField = (
 		});
 };
 
+const putBaseFieldLocalization = (
+	req: Request<{ id: string; language: string }>,
+	res: Response,
+	next: NextFunction,
+) => {
+	const id = Number.parseInt(req.params.id, 10);
+	if (Number.isNaN(id)) {
+		next(new InputValidationError('The entity id must be a number.', []));
+		return;
+	}
+
+	if (!isWritableBaseFieldLocalization(req.body)) {
+		next(
+			new InputValidationError(
+				'Invalid request body.',
+				isWritableBaseField.errors ?? [],
+			),
+		);
+		return;
+	}
+
+	createOrUpdateBaseFieldLocalization({
+		...req.body,
+		baseFieldId: id,
+		language: req.params.language,
+	})
+		.then((baseFieldLocalization) => {
+			res
+				.status(200)
+				.contentType('application/json')
+				.send(baseFieldLocalization);
+		})
+		.catch((error: unknown) => {
+			if (isTinyPgErrorWithQueryContext(error)) {
+				next(
+					new DatabaseError('Error updating base field localization.', error),
+				);
+				return;
+			}
+			next(error);
+		});
+};
+
 export const baseFieldsHandlers = {
 	getBaseFields,
 	postBaseField,
 	putBaseField,
+	putBaseFieldLocalization,
 };

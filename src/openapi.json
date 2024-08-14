@@ -3,7 +3,7 @@
 	"info": {
 		"title": "Philanthropy Data Commons API",
 		"description": "An API for a common data platform to make the process of submitting data requests to funders less burdensome for organizations seeking grants.",
-		"version": "0.11.0",
+		"version": "0.12.0",
 		"license": {
 			"name": "GNU Affero General Public License v3.0 only",
 			"url": "https://spdx.org/licenses/AGPL-3.0-only.html"
@@ -518,6 +518,13 @@
 						"type": "string",
 						"example": "firstName"
 					},
+					"localizations": {
+						"type": "object",
+						"additionalProperties": {
+							"$ref": "#/components/schemas/BaseFieldLocalization"
+						},
+						"readOnly": true
+					},
 					"dataType": {
 						"type": "string",
 						"enum": [
@@ -532,7 +539,6 @@
 					},
 					"scope": {
 						"type": "string",
-						"readOnly": true,
 						"enum": ["proposal", "organization"]
 					},
 					"createdAt": {
@@ -550,6 +556,36 @@
 					"scope",
 					"createdAt"
 				]
+			},
+			"BaseFieldLocalization": {
+				"type": "object",
+				"properties": {
+					"baseFieldId": {
+						"type": "integer",
+						"example": 1,
+						"readOnly": "true"
+					},
+					"language": {
+						"type": "string",
+						"example": "en",
+						"readOnly": "true"
+					},
+					"label": {
+						"type": "string",
+						"example": "Applicant Name"
+					},
+					"description": {
+						"type": "string",
+						"example": "The Name of the Applicant",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"readOnly": true
+					}
+				},
+				"required": ["baseFieldId", "language", "localization", "label"]
 			},
 			"PdcError": {
 				"type": "object",
@@ -1540,6 +1576,90 @@
 					},
 					"404": {
 						"description": "The base field could not be found."
+					}
+				}
+			}
+		},
+		"/baseFields/{baseFieldId}/{language}": {
+			"put": {
+				"operationId": "upsertBaseFieldLocalization",
+				"summary": "Create or update a base field localization.",
+				"tags": ["Base Fields"],
+				"security": [
+					{
+						"auth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "baseFieldId",
+						"description": "The PDC-generated ID of a base field.",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer"
+						}
+					},
+					{
+						"name": "language",
+						"description": "The valid IETF language tag for a base field localization",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BaseFieldLocalization"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "The new base field localization that was created.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BaseFieldLocalization"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Required fields were not provided or were incorrectly formatted.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PdcError"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "There was a unique key conflict.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PdcError"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "The base field localization references entities that do not exist in the database.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PdcError"
+								}
+							}
+						}
 					}
 				}
 			}

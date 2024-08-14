@@ -66,7 +66,8 @@ const createTestBulkUpload = async (
 const createTestBaseFields = async (): Promise<void> => {
 	await createBaseField({
 		defaultLabel: 'Proposal Submitter Email',
-		defaultDescription: 'The email address of the person who submitted the proposal.',
+		defaultDescription:
+			'The email address of the person who submitted the proposal.',
 		shortCode: 'proposal_submitter_email',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,
@@ -392,6 +393,7 @@ describe('processBulkUpload', () => {
 											defaultLabel: 'Proposal Submitter Email',
 											scope: 'proposal',
 											shortCode: 'proposal_submitter_email',
+											localizations: {},
 										},
 										baseFieldId: 1,
 										createdAt: expectTimestamp,
@@ -413,11 +415,13 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											defaultDescription: 'The name of the applying organization.',
+											defaultDescription:
+												'The name of the applying organization.',
 											id: 2,
 											defaultLabel: 'Organization Name',
 											scope: 'organization',
 											shortCode: 'organization_name',
+											localizations: {},
 										},
 										baseFieldId: 2,
 										createdAt: expectTimestamp,
@@ -463,6 +467,7 @@ describe('processBulkUpload', () => {
 											defaultLabel: 'Proposal Submitter Email',
 											scope: 'proposal',
 											shortCode: 'proposal_submitter_email',
+											localizations: {},
 										},
 										baseFieldId: 1,
 										createdAt: expectTimestamp,
@@ -484,11 +489,13 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											defaultDescription: 'The name of the applying organization.',
+											defaultDescription:
+												'The name of the applying organization.',
 											id: 2,
 											defaultLabel: 'Organization Name',
 											scope: 'organization',
 											shortCode: 'organization_name',
+											localizations: {},
 										},
 										baseFieldId: 2,
 										createdAt: expectTimestamp,
