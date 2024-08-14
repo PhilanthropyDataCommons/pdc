@@ -3,8 +3,8 @@ RETURNS JSONB AS $$
 BEGIN
   RETURN jsonb_build_object(
     'id', base_field.id,
-    'label', base_field.label,
-    'description', base_field.description,
+    'defaultLabel', base_field.default_label,
+    'defaultDescription', base_field.default_description,
     'shortCode', base_field.short_code,
     'dataType', base_field.data_type,
     'scope', base_field.scope,

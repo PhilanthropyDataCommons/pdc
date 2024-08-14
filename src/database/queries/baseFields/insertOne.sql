@@ -1,13 +1,13 @@
 INSERT INTO base_fields (
-  label,
-  description,
+  default_label,
+  default_description,
   short_code,
   data_type,
   scope
 )
 VALUES (
-  :label,
-  :description,
+  :defaultLabel,
+  :defaultDescription,
   :shortCode,
   :dataType,
   :scope

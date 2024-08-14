@@ -65,22 +65,22 @@ const createTestBulkUpload = async (
 
 const createTestBaseFields = async (): Promise<void> => {
 	await createBaseField({
-		label: 'Proposal Submitter Email',
-		description: 'The email address of the person who submitted the proposal.',
+		defaultLabel: 'Proposal Submitter Email',
+		defaultDescription: 'The email address of the person who submitted the proposal.',
 		shortCode: 'proposal_submitter_email',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,
 	});
 	await createBaseField({
-		label: 'Organization Name',
-		description: 'The name of the applying organization.',
+		defaultLabel: 'Organization Name',
+		defaultDescription: 'The name of the applying organization.',
 		shortCode: 'organization_name',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.ORGANIZATION,
 	});
 	await createBaseField({
-		label: 'Organization EIN',
-		description: 'The name of the applying organization.',
+		defaultLabel: 'Organization EIN',
+		defaultDescription: 'The name of the applying organization.',
 		shortCode: 'organization_tax_id',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.ORGANIZATION,
@@ -386,10 +386,10 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											description:
+											defaultDescription:
 												'The email address of the person who submitted the proposal.',
 											id: 1,
-											label: 'Proposal Submitter Email',
+											defaultLabel: 'Proposal Submitter Email',
 											scope: 'proposal',
 											shortCode: 'proposal_submitter_email',
 										},
@@ -413,9 +413,9 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											description: 'The name of the applying organization.',
+											defaultDescription: 'The name of the applying organization.',
 											id: 2,
-											label: 'Organization Name',
+											defaultLabel: 'Organization Name',
 											scope: 'organization',
 											shortCode: 'organization_name',
 										},
@@ -457,10 +457,10 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											description:
+											defaultDescription:
 												'The email address of the person who submitted the proposal.',
 											id: 1,
-											label: 'Proposal Submitter Email',
+											defaultLabel: 'Proposal Submitter Email',
 											scope: 'proposal',
 											shortCode: 'proposal_submitter_email',
 										},
@@ -484,9 +484,9 @@ describe('processBulkUpload', () => {
 										baseField: {
 											createdAt: expectTimestamp,
 											dataType: 'string',
-											description: 'The name of the applying organization.',
+											defaultDescription: 'The name of the applying organization.',
 											id: 2,
-											label: 'Organization Name',
+											defaultLabel: 'Organization Name',
 											scope: 'organization',
 											shortCode: 'organization_name',
 										},

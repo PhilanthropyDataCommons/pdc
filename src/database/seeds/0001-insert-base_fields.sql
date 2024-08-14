@@ -17,7 +17,7 @@
 -- The SQL in this file was generated from a spreadsheet as input to a script here:
 -- https://github.com/PhilanthropyDataCommons/data-scripts/commit/2af7a7109017f7d43ff7593660dbdce44732d126
 
-INSERT INTO base_fields (label, description, short_code, data_type, scope) VALUES
+INSERT INTO base_fields (default_label, default_description, short_code, data_type, scope) VALUES
 ('Organization Name', '', 'organization_name', 'string', 'proposal' ),
 ('Organization Legal Name' , '', 'organization_legal_name', 'string', 'proposal' ),
 ('Organization DBA Name' , '', 'organization_dba_name', 'string', 'proposal' ),

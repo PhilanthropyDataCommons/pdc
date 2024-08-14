@@ -8,12 +8,13 @@ import type {
 export const createBaseField = async (
 	createValues: WritableBaseField,
 ): Promise<BaseField> => {
-	const { label, description, shortCode, dataType, scope } = createValues;
+	const { defaultLabel, defaultDescription, shortCode, dataType, scope } =
+		createValues;
 	const result = await db.sql<JsonResultSet<BaseField>>(
 		'baseFields.insertOne',
 		{
-			label,
-			description,
+			defaultLabel,
+			defaultDescription,
 			shortCode,
 			dataType,
 			scope,

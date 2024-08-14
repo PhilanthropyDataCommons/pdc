@@ -18,8 +18,8 @@ export enum BaseFieldScope {
 
 interface BaseField {
 	readonly id: number;
-	label: string;
-	description: string;
+	defaultLabel: string;
+	defaultDescription: string;
 	shortCode: string;
 	dataType: BaseFieldDataType;
 	scope: BaseFieldScope;
@@ -31,10 +31,10 @@ type WritableBaseField = Writable<BaseField>;
 const writableBaseFieldSchema: JSONSchemaType<WritableBaseField> = {
 	type: 'object',
 	properties: {
-		label: {
+		defaultLabel: {
 			type: 'string',
 		},
-		description: {
+		defaultDescription: {
 			type: 'string',
 		},
 		shortCode: {
@@ -49,7 +49,13 @@ const writableBaseFieldSchema: JSONSchemaType<WritableBaseField> = {
 			enum: Object.values(BaseFieldScope),
 		},
 	},
-	required: ['label', 'description', 'shortCode', 'dataType', 'scope'],
+	required: [
+		'defaultLabel',
+		'defaultDescription',
+		'shortCode',
+		'dataType',
+		'scope',
+	],
 };
 
 const isWritableBaseField = ajv.compile(writableBaseFieldSchema);

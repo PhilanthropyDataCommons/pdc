@@ -12,8 +12,8 @@ const agent = request.agent(app);
 
 const createTestBaseField = async () =>
 	createBaseField({
-		label: 'Summary',
-		description: 'A summary of the proposal',
+		defaultLabel: 'Summary',
+		defaultDescription: 'A summary of the proposal',
 		shortCode: 'summary',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,
@@ -31,15 +31,15 @@ describe('/baseFields', () => {
 
 		it('returns all base fields present in the database', async () => {
 			await createBaseField({
-				label: 'First Name',
-				description: 'The first name of the applicant',
+				defaultLabel: 'First Name',
+				defaultDescription: 'The first name of the applicant',
 				shortCode: 'firstName',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
 			});
 			await createBaseField({
-				label: 'Last Name',
-				description: 'The last name of the applicant',
+				defaultLabel: 'Last Name',
+				defaultDescription: 'The last name of the applicant',
 				shortCode: 'lastName',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
@@ -48,16 +48,16 @@ describe('/baseFields', () => {
 			expect(result.body).toMatchObject([
 				{
 					id: 1,
-					label: 'First Name',
-					description: 'The first name of the applicant',
+					defaultLabel: 'First Name',
+					defaultDescription: 'The first name of the applicant',
 					shortCode: 'firstName',
 					dataType: BaseFieldDataType.STRING,
 					createdAt: expectTimestamp,
 				},
 				{
 					id: 2,
-					label: 'Last Name',
-					description: 'The last name of the applicant',
+					defaultLabel: 'Last Name',
+					defaultDescription: 'The last name of the applicant',
 					shortCode: 'lastName',
 					dataType: BaseFieldDataType.STRING,
 					createdAt: expectTimestamp,
@@ -82,8 +82,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,
@@ -93,8 +93,8 @@ describe('/baseFields', () => {
 			expect(before.count).toEqual(0);
 			expect(result.body).toMatchObject({
 				id: expect.any(Number) as number,
-				label: '🏷️',
-				description: '😍',
+				defaultLabel: '🏷️',
+				defaultDescription: '😍',
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
@@ -110,7 +110,7 @@ describe('/baseFields', () => {
 				.set(adminUserAuthHeader)
 				.send({
 					shortCode: '🩳',
-					description: '😍',
+					defaultDescription: '😍',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,
 				})
@@ -127,7 +127,7 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
+					defaultLabel: '🏷️',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,
@@ -145,8 +145,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,
 				})
@@ -163,8 +163,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					scope: BaseFieldScope.PROPOSAL,
 				})
@@ -181,8 +181,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: '🤡',
 					scope: BaseFieldScope.PROPOSAL,
@@ -200,8 +200,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 				})
@@ -218,8 +218,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 					scope: '🤡',
@@ -233,8 +233,8 @@ describe('/baseFields', () => {
 
 		it('returns 409 conflict when a duplicate short name is submitted', async () => {
 			await createBaseField({
-				label: 'First Name',
-				description: 'The first name of the applicant',
+				defaultLabel: 'First Name',
+				defaultDescription: 'The first name of the applicant',
 				shortCode: 'firstName',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
@@ -244,8 +244,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: 'firstName',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,
@@ -276,8 +276,8 @@ describe('/baseFields', () => {
 			// the point of the test, so having full explicit control of the original value
 			// seems important.  Some day when we add better test tooling we can have it all.
 			await createBaseField({
-				label: 'Summary',
-				description: 'A summary of the proposal',
+				defaultLabel: 'Summary',
+				defaultDescription: 'A summary of the proposal',
 				shortCode: 'summary',
 				dataType: BaseFieldDataType.STRING,
 				scope: BaseFieldScope.PROPOSAL,
@@ -287,8 +287,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.NUMBER,
 					scope: BaseFieldScope.ORGANIZATION,
@@ -297,8 +297,8 @@ describe('/baseFields', () => {
 			const baseFields = await loadBaseFields();
 			expect(baseFields[0]).toMatchObject({
 				id: 1,
-				label: '🏷️',
-				description: '😍',
+				defaultLabel: '🏷️',
+				defaultDescription: '😍',
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.NUMBER,
 				scope: BaseFieldScope.ORGANIZATION,
@@ -313,8 +313,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.NUMBER,
 					scope: BaseFieldScope.ORGANIZATION,
@@ -322,8 +322,8 @@ describe('/baseFields', () => {
 				.expect(200);
 			expect(result.body).toMatchObject({
 				id: 1,
-				label: '🏷️',
-				description: '😍',
+				defaultLabel: '🏷️',
+				defaultDescription: '😍',
 				shortCode: '🩳',
 				dataType: BaseFieldDataType.NUMBER,
 				scope: BaseFieldScope.ORGANIZATION,
@@ -340,7 +340,7 @@ describe('/baseFields', () => {
 				.set(adminUserAuthHeader)
 				.send({
 					shortCode: '🩳',
-					description: '😍',
+					defaultDescription: '😍',
 					dataType: BaseFieldDataType.STRING,
 				})
 				.expect(400);
@@ -357,7 +357,7 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
+					defaultLabel: '🏷️',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 				})
@@ -375,8 +375,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					dataType: BaseFieldDataType.STRING,
 				})
 				.expect(400);
@@ -393,8 +393,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 				})
 				.expect(400);
@@ -410,8 +410,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: 'firstName',
 					dataType: BaseFieldDataType.STRING,
 				})
@@ -428,8 +428,8 @@ describe('/baseFields', () => {
 				.type('application/json')
 				.set(adminUserAuthHeader)
 				.send({
-					label: '🏷️',
-					description: '😍',
+					defaultLabel: '🏷️',
+					defaultDescription: '😍',
 					shortCode: '🩳',
 					dataType: BaseFieldDataType.STRING,
 					scope: BaseFieldScope.PROPOSAL,

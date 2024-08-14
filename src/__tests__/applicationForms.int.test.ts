@@ -18,15 +18,15 @@ const agent = request.agent(app);
 
 const createTestBaseFields = async () => {
 	await createBaseField({
-		label: 'Organization Name',
-		description: 'The organizational name of the applicant',
+		defaultLabel: 'Organization Name',
+		defaultDescription: 'The organizational name of the applicant',
 		shortCode: 'organizationName',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.ORGANIZATION,
 	});
 	await createBaseField({
-		label: 'Years of work',
-		description: 'The number of years the project will take to complete',
+		defaultLabel: 'Years of work',
+		defaultDescription: 'The number of years the project will take to complete',
 		shortCode: 'yearsOfWork',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,
@@ -152,8 +152,8 @@ describe('/applicationForms', () => {
 						baseFieldId: 2,
 						baseField: {
 							id: 2,
-							label: 'Years of work',
-							description:
+							defaultLabel: 'Years of work',
+							defaultDescription:
 								'The number of years the project will take to complete',
 							shortCode: 'yearsOfWork',
 							dataType: BaseFieldDataType.STRING,
@@ -169,8 +169,8 @@ describe('/applicationForms', () => {
 						baseFieldId: 1,
 						baseField: {
 							id: 1,
-							label: 'Organization Name',
-							description: 'The organizational name of the applicant',
+							defaultLabel: 'Organization Name',
+							defaultDescription: 'The organizational name of the applicant',
 							shortCode: 'organizationName',
 							dataType: BaseFieldDataType.STRING,
 							createdAt: expectTimestamp,

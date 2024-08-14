@@ -18,15 +18,15 @@ const agent = request.agent(app);
 
 const createTestBaseFields = async () => {
 	await createBaseField({
-		label: 'First Name',
-		description: 'The first name of the applicant',
+		defaultLabel: 'First Name',
+		defaultDescription: 'The first name of the applicant',
 		shortCode: 'firstName',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,
 	});
 	await createBaseField({
-		label: 'Last Name',
-		description: 'The last name of the applicant',
+		defaultLabel: 'Last Name',
+		defaultDescription: 'The last name of the applicant',
 		shortCode: 'lastName',
 		dataType: BaseFieldDataType.STRING,
 		scope: BaseFieldScope.PROPOSAL,

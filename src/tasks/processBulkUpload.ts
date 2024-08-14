@@ -178,7 +178,7 @@ const createApplicationFormFieldsForBulkUpload = async (
 				applicationFormId,
 				baseFieldId: baseField.id,
 				position: index,
-				label: baseField.label,
+				label: baseField.defaultLabel,
 			});
 			return applicationFormField;
 		}),

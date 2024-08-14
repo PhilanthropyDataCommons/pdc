@@ -506,11 +506,11 @@
 						"readOnly": true,
 						"example": 3011
 					},
-					"label": {
+					"defaultLabel": {
 						"type": "string",
 						"example": "First Name"
 					},
-					"description": {
+					"defaultDescription": {
 						"type": "string",
 						"example": "The first name of the applicant"
 					},

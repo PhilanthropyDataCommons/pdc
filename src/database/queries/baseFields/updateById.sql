@@ -1,6 +1,6 @@
 UPDATE base_fields SET
-  label = :label,
-  description = :description,
+  default_label = :defaultLabel,
+  default_description = :defaultDescription,
   short_code = :shortCode,
   data_type = :dataType,
   scope = :scope
