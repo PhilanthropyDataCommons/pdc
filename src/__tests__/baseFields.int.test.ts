@@ -615,6 +615,23 @@ describe('/baseFields', () => {
 			});
 		});
 
+		it('returns 400 when an invalid IETF language tag is sent', async () => {
+			await createTestBaseField();
+			const result = await agent
+				.put('/baseFields/1/klingon')
+				.type('application/json')
+				.set(adminUserAuthHeader)
+				.send({
+					label: 'Résume',
+					description: 'Le Résume de proposal',
+				})
+				.expect(400);
+			expect(result.body).toMatchObject({
+				name: 'InputValidationError',
+				details: expect.any(Array) as unknown[],
+			});
+		});
+
 		it('returns 422 conflict when a base field is referenced that does not exist', async () => {
 			const result = await agent
 				.put('/baseFields/1/fr')

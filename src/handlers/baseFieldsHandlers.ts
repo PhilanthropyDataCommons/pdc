@@ -7,6 +7,7 @@ import {
 } from '../database';
 import {
 	isTinyPgErrorWithQueryContext,
+	isValidLanguage,
 	isWritableBaseField,
 	isWritableBaseFieldLocalization,
 } from '../types';
@@ -100,6 +101,16 @@ const putBaseFieldLocalization = (
 	const id = Number.parseInt(req.params.id, 10);
 	if (Number.isNaN(id)) {
 		next(new InputValidationError('The entity id must be a number.', []));
+		return;
+	}
+
+	if (!isValidLanguage(req.params.language)) {
+		next(
+			new InputValidationError(
+				'The entity language must be a valid IETF language tag',
+				[],
+			),
+		);
 		return;
 	}
 

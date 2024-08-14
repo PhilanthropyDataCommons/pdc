@@ -10,6 +10,7 @@ export * from './express/AuthenticatedRequest';
 export * from './Id';
 export * from './JsonObject';
 export * from './JsonResultSet';
+export * from './Language';
 export * from './Opportunity';
 export * from './Organization';
 export * from './OrganizationProposal';
