@@ -25,6 +25,10 @@ While the PDC service layer will have its own web-browser-based searching and br
 
 See also the [technical architecture diagram](docs/ARCHITECTURE.md).
 
+## Hosting
+
+For notes on how to set up a production instance, see the [hosting documentation](docs/HOSTING.md).
+
 ## Development
 
 In order to run this software you need to set up a [Postgres 14](https://www.postgresql.org/) database.
