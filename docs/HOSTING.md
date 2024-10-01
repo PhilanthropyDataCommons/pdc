@@ -28,7 +28,7 @@ and the
 The PDC API can be deployed on
 [DigitalOcean App Platform](https://www.digitalocean.com/products/app-platform):
 
-[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/PhilanthropyDataCommons/service/tree/main)
+[![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/PhilanthropyDataCommons/service/tree/digitalocean-app-test)
 
 Although specified in the template,
 the API cannot be used with a DigitalOcean dev database,

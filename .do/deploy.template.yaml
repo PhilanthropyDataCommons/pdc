@@ -51,7 +51,7 @@ spec:
   jobs:
     - environment_slug: node-js
       github:
-        branch: main
+        branch: digitalocean-app-test
         repo: PhilanthropyDataCommons/service
       instance_count: 1
       instance_size_slug: basic-xxs
@@ -62,7 +62,7 @@ spec:
   services:
     - environment_slug: node-js
       github:
-        branch: main
+        branch: digitalocean-app-test
         repo: PhilanthropyDataCommons/service
       health_check:
         http_path: /
