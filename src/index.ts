@@ -22,7 +22,8 @@ const start = async () => {
 		throw err;
 	}
 	app.listen(port, host, () => {
-		logger.info(`Server running on http://${host}:${port}`);
+		const mode = process.env.NODE_ENV === 'production' ? 'production' : 'debug';
+		logger.info(`Server running on http://${host}:${port} in ${mode} mode`);
 	});
 };
 
