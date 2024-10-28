@@ -132,6 +132,9 @@ erDiagram
 	Proposal }o--|| User : "is created by"
 	ProposalVersion }o--|| User : "is created by"
 	BulkUpload }o--|| User : "is created by"
+	User }o--o{ Changemaker : "is granted access within"
+	User }o--o{ Funder : "is granted access within"
+	User }o--o{ DataProvider : "is granted access within"
 ```
 
 ## Narrative

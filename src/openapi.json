@@ -947,12 +947,141 @@
 					}
 				]
 			},
+			"AccessType": {
+				"type": "string",
+				"enum": ["manage", "edit", "view"]
+			},
+			"ChangemakerRole": {
+				"type": "object",
+				"properties": {
+					"changemakerId": {
+						"type": "integer",
+						"readOnly": true
+					},
+					"userKeycloakUserId": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"accessType": {
+						"$ref": "#/components/schemas/AccessType",
+						"readOnly": true
+					},
+					"createdBy": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"readOnly": true
+					}
+				},
+				"required": ["changemakerId", "userKeycloakUserId", "assignedRole"]
+			},
+			"DataProviderRole": {
+				"type": "object",
+				"properties": {
+					"dataProviderShortCode": {
+						"type": "string",
+						"readOnly": true
+					},
+					"userKeycloakUserId": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"accessType": {
+						"$ref": "#/components/schemas/AccessType",
+						"readOnly": true
+					},
+					"createdBy": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"readOnly": true
+					}
+				},
+				"required": [
+					"dataProviderShortCode",
+					"userKeycloakUserId",
+					"assignedRole"
+				]
+			},
+			"FunderRole": {
+				"type": "object",
+				"properties": {
+					"funderShortCode": {
+						"type": "string",
+						"readOnly": true
+					},
+					"userKeycloakUserId": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"accessType": {
+						"$ref": "#/components/schemas/AccessType",
+						"readOnly": true
+					},
+					"createdBy": {
+						"type": "string",
+						"format": "uuid",
+						"readOnly": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"readOnly": true
+					}
+				},
+				"required": ["funderShortCode", "userKeycloakUserId", "assignedRole"]
+			},
+			"RoleMap": {
+				"type": "object",
+				"propertyNames": {
+					"$ref": "#/components/schemas/AccessType"
+				},
+				"additionalProperties": {
+					"type": "boolean"
+				}
+			},
 			"User": {
 				"type": "object",
 				"properties": {
 					"keycloakUserId": {
 						"type": "string",
 						"example": "550e8400-e29b-41d4-a716-446655440000"
+					},
+					"roles": {
+						"type": "object",
+						"readOnly": true,
+						"properties": {
+							"changemaker": {
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "#/components/schemas/RoleMap"
+								}
+							},
+							"dataProvider": {
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "#/components/schemas/RoleMap"
+								}
+							},
+							"funder": {
+								"type": "object",
+								"additionalProperties": {
+									"$ref": "#/components/schemas/RoleMap"
+								}
+							}
+						},
+						"required": ["changemaker", "dataProvider", "funder"]
 					},
 					"createdAt": {
 						"type": "string",

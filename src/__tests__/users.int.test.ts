@@ -1,13 +1,24 @@
 import request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
 import { app } from '../app';
-import { createUser, loadSystemUser, loadTableMetrics } from '../database';
+import {
+	createChangemaker,
+	createOrUpdateChangemakerRole,
+	createOrUpdateDataProvider,
+	createOrUpdateDataProviderRole,
+	createOrUpdateFunder,
+	createOrUpdateFunderRole,
+	createUser,
+	loadSystemUser,
+	loadTableMetrics,
+} from '../database';
 import { expectTimestamp, loadTestUser } from '../test/utils';
 import {
 	mockJwt as authHeader,
 	mockJwtWithAdminRole as authHeaderWithAdminRole,
 } from '../test/mockJwt';
 import { keycloakUserIdToString, stringToKeycloakUserId } from '../types';
+import { AccessType } from '../types/AccessType';
 
 const createAdditionalTestUser = async () =>
 	createUser({
@@ -33,7 +44,84 @@ describe('/users', () => {
 				.expect(200);
 			expect(response.body).toEqual({
 				total: userCount,
-				entries: [testUser],
+				entries: [
+					{
+						keycloakUserId: testUser.keycloakUserId,
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
+						createdAt: expectTimestamp,
+					},
+				],
+			});
+		});
+
+		it('returns the roles associated with a user', async () => {
+			const systemUser = await loadSystemUser();
+			const testUser = await loadTestUser();
+			const dataProvider = await createOrUpdateDataProvider({
+				name: 'Test Provider',
+				shortCode: 'testProvider',
+			});
+			const funder = await createOrUpdateFunder({
+				name: 'Test Funder',
+				shortCode: 'testFunder',
+			});
+			const changemaker = await createChangemaker({
+				name: 'Test Changemaker',
+				taxId: '12-3456789',
+			});
+			await createOrUpdateDataProviderRole({
+				dataProviderShortCode: dataProvider.shortCode,
+				userKeycloakUserId: testUser.keycloakUserId,
+				accessType: AccessType.MANAGE,
+				createdBy: systemUser.keycloakUserId,
+			});
+			await createOrUpdateFunderRole({
+				funderShortCode: funder.shortCode,
+				userKeycloakUserId: testUser.keycloakUserId,
+				accessType: AccessType.EDIT,
+				createdBy: systemUser.keycloakUserId,
+			});
+			await createOrUpdateChangemakerRole({
+				changemakerId: changemaker.id,
+				userKeycloakUserId: testUser.keycloakUserId,
+				accessType: AccessType.VIEW,
+				createdBy: systemUser.keycloakUserId,
+			});
+			const { count: userCount } = await loadTableMetrics('users');
+
+			const response = await request(app)
+				.get('/users')
+				.set(authHeader)
+				.expect(200);
+			expect(response.body).toEqual({
+				total: userCount,
+				entries: [
+					{
+						keycloakUserId: testUser.keycloakUserId,
+						roles: {
+							changemaker: {
+								[changemaker.id]: {
+									view: true,
+								},
+							},
+							dataProvider: {
+								testProvider: {
+									manage: true,
+								},
+							},
+							funder: {
+								testFunder: {
+									edit: true,
+								},
+							},
+						},
+						createdAt: expectTimestamp,
+					},
+				],
 			});
 		});
 
@@ -99,22 +187,47 @@ describe('/users', () => {
 				entries: [
 					{
 						keycloakUserId: uuids[14],
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
 						createdAt: expectTimestamp,
 					},
 					{
 						keycloakUserId: uuids[13],
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
 						createdAt: expectTimestamp,
 					},
 					{
 						keycloakUserId: uuids[12],
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
 						createdAt: expectTimestamp,
 					},
 					{
 						keycloakUserId: uuids[11],
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
 						createdAt: expectTimestamp,
 					},
 					{
 						keycloakUserId: uuids[10],
+						roles: {
+							changemaker: {},
+							dataProvider: {},
+							funder: {},
+						},
 						createdAt: expectTimestamp,
 					},
 				],
