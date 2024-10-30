@@ -4,11 +4,13 @@ import type { JSONSchemaType } from 'ajv';
 import type { User } from './User';
 import type { KeycloakUserId } from './KeycloakUserId';
 
+interface GlobalRole {
+	isAdministrator: boolean;
+}
+
 interface AuthContext {
 	user: User;
-	role: {
-		isAdministrator: boolean;
-	};
+	role: GlobalRole;
 }
 
 const authContextSchema: JSONSchemaType<AuthContext> = {
@@ -37,9 +39,17 @@ const getKeycloakUserIdFromAuthContext = (
 	return keycloakUserId;
 };
 
+const getGlobalRoleFromAuthContext = (
+	req: AuthContext | undefined,
+): GlobalRole | undefined => {
+	const role = req?.role;
+	return role;
+};
+
 export {
 	AuthContext,
 	authContextSchema,
 	isAuthContext,
+	getGlobalRoleFromAuthContext,
 	getKeycloakUserIdFromAuthContext,
 };
