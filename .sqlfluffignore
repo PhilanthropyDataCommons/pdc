@@ -48,6 +48,3 @@ src/database/migrations/0042-alter-permission-tables-add-not_after.sql
 src/database/migrations/0043-alter-data_providers-add-keycloak_organization_id.sql
 src/database/migrations/0044-alter-funders-add-keycloak_organization_id.sql
 src/database/migrations/0045-alter-changemakers-add-keycloak_organization_id.sql
-
-# This file is very large, and is intended to be removed soon.
-src/database/seeds/0001-insert-base_fields.sql
