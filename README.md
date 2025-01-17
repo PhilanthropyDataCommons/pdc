@@ -183,7 +183,7 @@ For example: `0001-create-users` or `0001-modify-users`
 The `CopyBaseFieldsTask` worker is designed to copy basefields from a remote to a local instance of the pdc service. An administrative user looking to seed their database can make a POST request to the `/tasks/baseFieldsCopy` route, specifying the remote url in the body of the form:
 
 ```json
-{ "synchronizationUrl": "https://remote.pdc.instance" }
+{ "pdcApiUrl": "https://remote.pdc.instance" }
 ```
 
 #### Linting
